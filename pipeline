@@ -1,0 +1,59 @@
+pipeline {
+    agent any 
+     stages {
+        stage("Build") {
+            steps {
+                echo "mvn clean package"
+            }
+        }
+        stage("Unit and Integration Tests") {
+            steps {
+                echo "mvn for unit and integration testing" 
+            }
+        }
+        stage("Code Analysis") {
+            steps {
+               
+                echo "Using maven for code analysis" 
+            }
+        }
+        stage("Security Scan") {
+            steps {
+                echo "security check with maven" 
+            }
+        }
+        stage("Deploy to Staging") {
+            steps {
+        
+                echo "deploy to staging" 
+            }
+        }
+        stage("Integration Tests on Staging") {
+            steps {
+                echo "using test automation tools to run integration tests on staging"
+            }
+        }
+        stage("Deploy to Production") {
+            steps {
+                echo "using AWS CLI to deploy to production" 
+            }
+        }
+    }
+    post {
+        success {
+                    emailext subject: "Build Status Email",
+                    body: "Build was successful!",
+                    to: "manugajera13@gmail.com",
+                    attachLog: true
+                }
+        failure {
+            script {
+                // Sends email for failed builds
+                emailext body: "Build Failed!",
+                        subject: "Pipeline Has Failed",
+                        to: "manugajera13@gmail.com",
+                        attachLog: true
+            }
+        }
+    }
+}
